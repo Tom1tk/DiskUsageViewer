@@ -4,6 +4,10 @@ A small Windows app that shows how much space each folder and file on a drive us
 
 It is a native Win32 and Rust rewrite of an earlier Python version. It ships as one portable `.exe`, with no installer and no administrator rights needed.
 
+![Disk Usage Viewer showing sample data](docs/screenshot.png)
+
+*Sample data from a demo build, not a real drive.*
+
 ## Use it
 
 1. Download `DiskUsageViewer.exe` from the [Releases](https://github.com/Tom1tk/DiskUsageViewer/releases) page and run it.
@@ -58,3 +62,7 @@ The design decisions and the verification log are in [tasks/todo.md](tasks/todo.
 - Results are not saved between runs, and the tree does not update when files change.
 - The seek-penalty thread choice has not been tested on a spinning disk.
 - Cold-cache scan speed has not been measured.
+
+## About this project
+
+This was a test of Claude Haiku 5.5 working in Rust through Claude Code. The app is a native Win32 rewrite of an earlier Python version.
