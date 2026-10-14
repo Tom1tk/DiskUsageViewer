@@ -1,0 +1,23 @@
+[package]
+name = "disk_usage_viewer_macos"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+name = "disk_usage_viewer_macos"
+path = "src/lib.rs"
+
+[[bin]]
+name = "DiskUsageViewer"
+path = "src/main.rs"
+
+[dependencies]
+eframe = "0.36.2"
+libc = "0.2.190"
+
+[profile.release]
+opt-level = 3
+lto = "fat"
+codegen-units = 1
+panic = "abort"
+strip = "symbols"

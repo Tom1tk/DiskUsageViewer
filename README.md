@@ -38,6 +38,40 @@ The C runtime is linked statically, so the exe runs without extra redistributabl
 - It scans in parallel: up to 16 threads, or 2 when the drive reports a seek penalty (a spinning disk).
 - Results appear when the scan finishes.
 
+## macOS version
+
+The same app for macOS 14 or later, in [`macos/`](macos). It is written in Rust with [egui](https://github.com/emilk/egui) through eframe, with the same drive list, tree, treemap, hover and click behaviour and the same `--autostart` and `--scan` options. It shares the Windows `format.rs` and `treemap.rs` files, and the Windows code is unchanged.
+
+### Build
+
+You need the Rust toolchain from [rustup](https://rustup.rs) (verified with Rust 1.99.0 on Apple silicon). Then run:
+
+```bash
+macos/build-app.sh
+```
+
+This runs `cargo build --release` and creates `macos/DiskUsageViewer.app`, signed ad hoc (no developer account needed), so it runs on the Mac that built it. Open it with `open macos/DiskUsageViewer.app`. Run `cargo test` in `macos/` for the unit tests.
+
+### Command line
+
+- `DiskUsageViewer.app/Contents/MacOS/DiskUsageViewer --autostart` starts a scan of the selected drive when the window opens.
+- `DiskUsageViewer.app/Contents/MacOS/DiskUsageViewer --scan /` scans without a window and prints the scan time, the totals and the ten largest top-level entries.
+
+### How it scans
+
+- The default drive is `/`, as in Finder. Your files live on the Data volume, which is reached through paths such as `/Users`, so a scan of `/` covers them. Other volumes under `/Volumes` appear in the drive list and are scanned on their own.
+- Mount points are not entered, so the volumes under `/System/Volumes` are not counted twice.
+- Some folders are never opened, because macOS asks for permission before it lets a program read them: Desktop, Documents, Downloads, Movies, Music and Pictures in your home folder, and several folders under `~/Library` such as Mail, Messages and Safari. They are counted as skipped and their sizes are left out, even if you grant Full Disk Access. The full list is in [`withheld.rs`](macos/src/withheld.rs).
+- Sizes are size on disk. Hard links count once. Symbolic links are not followed. iCloud files that are not downloaded count as 0.
+
+### Limits
+
+- Because of the withheld folders, a typical account's total is lower than `du` or Finder report for the same disk.
+- A folder whose open blocks (for example while macOS waits on a permission answer) stalls the scan, and Cancel is only checked between folders. There is no timeout yet.
+- Built and tested on macOS 27 with Apple silicon only.
+
+The design decisions and the verification log are in [tasks/macos-todo.md](tasks/macos-todo.md).
+
 ## Source
 
 | File | Purpose |

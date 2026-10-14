@@ -1,2 +1,6 @@
 /target/
 /DiskUsageViewer.exe
+/macos/target/
+/macos/DiskUsageViewer.app
+/macos-swift/.build/
+/macos-swift/DiskUsageViewer.app
